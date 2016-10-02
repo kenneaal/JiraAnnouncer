@@ -19,7 +19,7 @@ class AnopeXMLRPC{
             "content" => $xmlquery)));
         $inbuf=file_get_contents($this->Host, false, $context);
         print("Inbuf: ".$inbuf);
-        $response=xmlrpc_decode($inbuf);
+
 //    if(isset($response[0]));
 //      return $response[0];
         return NULL;
@@ -53,6 +53,10 @@ switch($request_type) {
         break;
     case 'project_created':
         $message="Project created: \x02\x0307".$request->project->name."\x02\x03 [\x02x0308".$request->project->key."\x03\x02] under \x02\x0314".$request->project->projectLead->key." (".$request->project->projectLead->displayName.")";
+        break;
+    case 'project_deleted':
+        $message = "Project deleted: \x02\x0307\".$request->project->name.\"\x02\x03 [\x02x0308\".$request->project->key.\"\x03\x02] under \x02\x0314\".$request->project->projectLead->key.\" (\".$request->project->projectLead->displayName.\")";
+        break;
     default:
         $message = "JIRA unhandled event: " . $request_type;
         $temp = file_put_contents("unhandled_events", $str."\n", FILE_APPEND);
