@@ -44,6 +44,8 @@ if (!empty($str)) {
 $content =
     "Got a hit! Type " . $request_type . ", Project " . $request->issue->fields->project->key . " and summary " .
     $request->issue->fields->summary;
+$domessage = true;
+
 switch ($request_type) {
     case 'jira:issue_created':
         $message =
@@ -81,7 +83,7 @@ switch ($request_type) {
         break;
     case 'project_created':
         $message =
-            "Project created: \x02\x0307" . $request->project->name . "\x02\x03 [\x02x0308" .
+            "Project created: \x02\x0307" . $request->project->name . "\x02\x03 [\x02\x0308" .
             $request->project->key . "\x03\x02] under \x02\x0314" .
             $request->project->projectLead->key . " (" . $request->project->projectLead->displayName . ")";
         break;
@@ -96,7 +98,9 @@ switch ($request_type) {
         $temp = file_put_contents("unhandled_events", $str . "\n", FILE_APPEND);
         break;
 }
-
+$rlog = file_put_contents("jira_hook_log", $str . "\n\n", FILE_APPEND);
 $anopexmlrpc = new AnopeXMLRPC("https://127.0.0.1:6080/xmlrpc");
-$anopexmlrpc->DoCommand("botserv", "Absolver", "SAY #rattech \x0315JIRA:\x03 " . $message);
+if ($domessage == true) {
+    $anopexmlrpc->DoCommand("botserv", "Absolver", "SAY #rattech \x0315JIRA:\x03 " . $message);
+}
 ?>
